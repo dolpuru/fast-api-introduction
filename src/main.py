@@ -64,3 +64,4 @@ def get_todo_handler(todo_id: int):
         return
     raise HTTPException(status_code=404, detail="ToDo Not Found")
 
+
