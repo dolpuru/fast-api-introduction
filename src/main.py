@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -29,7 +29,7 @@ todo_data = {
     },
 }
 
-@app.get("/todos")
+@app.get("/todos", status_code=200)
 def get_todos_handler(order: str | None = None):
     ret = list(todo_data.values())
     if order and order == "DESC":
@@ -46,8 +46,13 @@ def create_todo_handler(request: CreateToDoRequest):
     todo_data[request.id] = request.dict()
     return todo_data[request.id]
 
-@app.delete("/todos/{todo_id}")
+@app.delete("/todos/{todo_id}", status_code=200)
 def delete_todo_handler(todo_id: int):
+    todo = todo_data.get(todo_id)
+    if todo:
+        return todo
+    raise HTTPException(status_code=404, detail="ToDo Not Found")
+
     todo_data.pop(todo_id, None)
     return todo_data
 
