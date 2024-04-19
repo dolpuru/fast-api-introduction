@@ -41,22 +41,26 @@ class CreateToDoRequest(BaseModel):
     contents: str
     is_done: bool
 
-@app.post("/todos")
+@app.post("/todos", status_code=201)
 def create_todo_handler(request: CreateToDoRequest):
     todo_data[request.id] = request.dict()
+
+
+
     return todo_data[request.id]
 
-@app.delete("/todos/{todo_id}", status_code=200)
+@app.delete("/todos/{todo_id}", status_code=204)
 def delete_todo_handler(todo_id: int):
-    todo = todo_data.get(todo_id)
+
+    todo = todo_data.pop(todo_id, None)
     if todo:
-        return todo
+        return
     raise HTTPException(status_code=404, detail="ToDo Not Found")
 
-    todo_data.pop(todo_id, None)
-    return todo_data
-
-@app.get("/todos/{todo_id}")
+@app.get("/todos/{todo_id}", status_code=200)
 def get_todo_handler(todo_id: int):
-    return todo_data.get(todo_id, {})
+    todo = todo_data.get(todo_id)
+    if todo:
+        return
+    raise HTTPException(status_code=404, detail="ToDo Not Found")
 
