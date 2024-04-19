@@ -10,6 +10,6 @@ class ToDoSchema(BaseModel):
     class Config:
         orm_mode = True
 
-class ListToDoResponse(BaseModel):
+class ToDoListSchema(BaseModel):
     todos: List[ToDoSchema]
 
