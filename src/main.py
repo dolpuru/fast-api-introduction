@@ -46,6 +46,11 @@ def create_todo_handler(request: CreateToDoRequest):
     todo_data[request.id] = request.dict()
     return todo_data[request.id]
 
+@app.delete("/todos/{todo_id}")
+def delete_todo_handler(todo_id: int):
+    todo_data.pop(todo_id, None)
+    return todo_data
+
 @app.get("/todos/{todo_id}")
 def get_todo_handler(todo_id: int):
     return todo_data.get(todo_id, {})
